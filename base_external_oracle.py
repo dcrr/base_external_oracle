@@ -128,10 +128,13 @@ class base_external_dbsource(orm.Model):
                     cur.execute(sqlquery, sqlparams)
                     if metadata:
                         cols = [d[0] for d in cur.description]
-                    rows = cur.fetchall()
+                    if cur.fetchvars:
+                        rows = cur.fetchall()
+                    else:
+                        conn.commit()
                     cur.close()
             except Exception as e:
-                raise orm.except_orm(_("Failed Transaction!"),_("Failed Transaction"))
+                raise orm.except_orm(_("Failed Transaction!"),_(e.message))
             conn.close()
         if metadata:
             return{'cols': cols, 'rows': rows}
