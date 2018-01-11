@@ -94,7 +94,7 @@ class base_external_dbsource(orm.Model):
         return conn
 
     def execute(self, cr, uid, ids, sqlquery, sqlparams=None, metadata=False,
-                context=None):
+                return_id=False, context=None):
         """Executes SQL and returns a list of rows.
 
             "sqlparams" can be a dict of values, that can be referenced in
@@ -111,6 +111,8 @@ class base_external_dbsource(orm.Model):
                 { 'cols': [ 'col_a', 'col_b', ...]
                 , 'rows': [ (a0, b0, ...), (a1, b1, ...), ...] }
         """
+        if sqlparams is None:
+            sqlparams=()
         data = self.browse(cr, uid, ids)
         rows, cols = list(), list()
         for obj in data:
@@ -125,17 +127,24 @@ class base_external_dbsource(orm.Model):
                 else:
                     # using other db connectors
                     cur = conn.cursor()
+                    if return_id:
+                        new_id = cur.var(cx_Oracle.STRING)
+                        sqlparams = sqlparams + (new_id,)
                     cur.execute(sqlquery, sqlparams)
                     if metadata:
                         cols = [d[0] for d in cur.description]
                     if cur.fetchvars:
                         rows = cur.fetchall()
                     else:
+                        if return_id:
+                            new_id = new_id.getvalue()
                         conn.commit()
                     cur.close()
             except Exception as e:
                 raise orm.except_orm(_("Failed Transaction!"),_(e.message))
             conn.close()
+        if return_id:
+            return new_id
         if metadata:
             return{'cols': cols, 'rows': rows}
         else:
