@@ -95,21 +95,21 @@ class base_external_dbsource(orm.Model):
 
     def execute(self, cr, uid, ids, sqlquery, sqlparams=None, metadata=False,
                 return_id=False, context=None):
-        """Executes SQL and returns a list of rows.
-
-            "sqlparams" can be a dict of values, that can be referenced in
+        """Executes a given query.
+            "sqlparams" can be a tuple of values, that must be referenced in
             the SQL statement using "%(key)s" or, in the case of Oracle,
             ":key".
             Example:
                 sqlquery = "select * from mytable where city = %(city)s and
                             date > %(dt)s"
-                params   = {'city': 'Lisbon',
-                            'dt': datetime.datetime(2000, 12, 31)}
+                params   =  ('Valencia', datetime.datetime(2017, 12, 20))
 
             If metadata=True, it will instead return a dict containing the
             rows list and the columns list, in the format:
                 { 'cols': [ 'col_a', 'col_b', ...]
                 , 'rows': [ (a0, b0, ...), (a1, b1, ...), ...] }
+
+            If return_id=True, it will return the id of the created record
         """
         if sqlparams is None:
             sqlparams=()

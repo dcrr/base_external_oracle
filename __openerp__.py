@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Diana Rojas 2017
-#    Lead Solutions
+#    Diana Rojas, 2017
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,8 +22,9 @@
     'name': 'External Database Oracle',
     'version': '1.0',
     'category': 'Tools',
-    'description': """This module allow fix bugs in module base_external_dbsource, for connection with cx_Oracle (6.1).""",
-    'author': "Diana Rojas, Lead Solutions CIA",
+    'description': """This module allow fix bugs in module base_external_dbsource, 
+                    for connection with cx_Oracle (6.1).""",
+    'author': "Diana Rojas",
     'license': 'AGPL-3',
     'depends': ['base_external_dbsource'],
     'external_dependencies': {'python': ['cx_Oracle']},
